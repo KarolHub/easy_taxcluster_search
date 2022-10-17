@@ -92,7 +92,6 @@ for zotu in zotu_list:
 #First, which zotu are we talking about
     final_data_part.append(zotu)
     line = 0
-    lines = len(cluster)
     for lines in cluster:
 #This regular expression below searches for the first zotu occurence in the row, and all the stuff between its "[" and "]" when the zotu occurs. It was a hell to make and it took two days
 #It has to be this way, otherwise it's going to search for the firt "[" in a row, which is wrong - we need only the "[" right before the zotu name
@@ -116,12 +115,19 @@ for zotu in zotu_list:
                 final_data.append('\t'.join(final_data_part))
                 break
             else:
-#If for a specific zotu the morpho was not found, this is going to search for the morpho in a second row -> for a higher difference threshold 
+#If for a specific zotu the morpho was not found, this is going to search for the morpho in a second row -> for a higher difference threshold. If it's not found at all, it will print an error message
                 line += 1
+                if (line) > len(cluster)-1:
+                    print('could not find morpho')
+                    final_data_part.append('X')
+                    final_data_part.append('morpho not found')
+                    final_data_part.append(found_zotu)
+                    final_data.append('\t'.join(final_data_part))
+                    break
         else:
 #If zotu was not found in the cluster
-            print('did not find zotu')
-            final_data_part.append(zotu + 'not found')
+            print('could not find zotu')
+            final_data_part.append('zotu not found')
             final_data.append('\t'.join(final_data_part))
 
 
